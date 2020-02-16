@@ -18,15 +18,18 @@ def move():
 
     with os.scandir(PATH_TO_SORTING_BOX) as scan:
         for item in scan:
-            if item.name in downloads:
-                # do something
-                table_key = {'name': item.name}
-                type = db.get_item(Key=table_key)['Item']['type']
-                if type == 'movie':
-                    dl_source = PATH_TO_SORTING_BOX + '/{}'.format(item.name)
-                    print(dl_source)
-                    shutil.move(dl_source, PATH_TO_MOVIES)
-                    db.delete_item(Key=table_key)
+            for download in downloads:
+                if item.name in download:
+                    # do something
+                    table_key = {'name': download}
+                    type = db.get_item(Key=table_key)['Item']['type']
+                    if type == 'movie':
+                        dl_source = PATH_TO_SORTING_BOX + '/{}'.format(item.name)
+                        print(dl_source)
+                        shutil.move(dl_source, PATH_TO_MOVIES)
+                        db.delete_item(Key=table_key)
 
 if __name__ == '__main__':
     move()
+
+    # print(db.scan()['Items'])
